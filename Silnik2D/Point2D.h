@@ -1,23 +1,31 @@
-// Point2D.h (replace #include with a forward declaration)
 #ifndef POINT2D_H
 #define POINT2D_H
 
+#include <SFML/Graphics.hpp>
+
+// Forward declaration of sf::Color
+namespace sf {
+    class Color;
+}
 
 class Point2D {
 public:
+    Point2D();
+    Point2D(int x, int y);
+    Point2D(int x, int y, sf::Color colorP);
 
-    //Opisy sa w Source Files .cpp
-    Point2D(float x = 0, float y = 0);
+    int getX();
+    int getY();
 
-    float getX() const;
-    float getY() const;
+    void setX(int x);
+    void setY(int y);
 
-    void setX(float x);
-    void setY(float y);
-
+    sf::Color getColor();
+    void setColor(const sf::Color color);
 
 private:
-    float x, y;
+    int x, y;
+    sf::Color colorP;
 };
 
 #endif

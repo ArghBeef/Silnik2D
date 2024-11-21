@@ -4,21 +4,27 @@
 #include <SFML/Graphics.hpp>
 #include "Point2D.h"
 #include <vector>
-#include <cmath>
-#define M_PI 3.14159265358979323846
+#include <queue>
+#include <iostream>
+#include "Circle.h"
+#include "Polygon.h"
+
 
 class PrimitiveRenderer {
 public:
+    std::vector<Point2D> points;
+    sf::Image drawingBuffer;
+    std::vector<Point2D> filledAreas;
     PrimitiveRenderer(sf::RenderWindow& window);
 
-    //Opisy sa w Source Files .cpp
-    void drawPoint(const Point2D& point, sf::Color color);
-    void drawLine(const Point2D& p0, const Point2D& p1, sf::Color color);
-    void drawCircle(const Point2D& center, float radius, sf::Color color);
-    void drawSquare(const Point2D& origin, float sizeX, float sizeY, sf::Color color);
-    void drawTriangle(const Point2D& origin, float size, sf::Color color);
-    void drawPolyline(const std::vector<Point2D>& points, bool closed , sf::Color color);
+    void draw();
+    void drawPoint(Point2D point);
+    void drawLine(Point2D p0, Point2D p1, sf::Color color);
+    void fillColor(Point2D origin, sf::Color fill_color, sf::Color background_color);
 
+    const sf::Image& getDrawingBuffer() const {
+        return drawingBuffer;
+    }
 
 private:
     sf::RenderWindow& window;
