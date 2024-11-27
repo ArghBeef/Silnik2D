@@ -5,14 +5,12 @@ BitmapHandler::BitmapHandler() : isInitialized(false) {}
 BitmapHandler::~BitmapHandler() {}
 
 bool BitmapHandler::create(unsigned int width, unsigned int height, sf::Color color) {
-    // Create a blank image with a specific size and fill color
     bitmap.create(width, height, color);
     isInitialized = true;
     return true;
 }
 
 bool BitmapHandler::loadFromFile(const std::string& filePath) {
-    // Load image from file
     if (bitmap.loadFromFile(filePath)) {
         isInitialized = true;
         return true;
@@ -21,7 +19,6 @@ bool BitmapHandler::loadFromFile(const std::string& filePath) {
 }
 
 bool BitmapHandler::saveToFile(const std::string& filePath) {
-    // Save image to file
     if (!isInitialized) {
         return false;
     }
@@ -32,7 +29,11 @@ void BitmapHandler::clear(sf::Color color) {
     if (!isInitialized) return;
 
     sf::Vector2u size = bitmap.getSize();
-    bitmap.create(size.x, size.y, color);
+    for (unsigned int y = 0; y < size.y; ++y) {
+        for (unsigned int x = 0; x < size.x; ++x) {
+            bitmap.setPixel(x, y, color);
+        }
+    }
 }
 
 bool BitmapHandler::copyFrom(const BitmapHandler& source) {
@@ -43,7 +44,7 @@ bool BitmapHandler::copyFrom(const BitmapHandler& source) {
     return true;
 }
 
-sf::Image BitmapHandler::getImage() const {
+const sf::Image& BitmapHandler::getImage() const {
     return bitmap;
 }
 

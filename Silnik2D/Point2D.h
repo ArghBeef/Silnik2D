@@ -2,29 +2,27 @@
 #define POINT2D_H
 
 #include <SFML/Graphics.hpp>
+#include "TransformableObject.h"
 
-// Forward declaration of sf::Color
-namespace sf {
-    class Color;
-}
-
-class Point2D {
+class Point2D : public TransformableObject {
 public:
     Point2D();
-    Point2D(int x, int y);
-    Point2D(int x, int y, sf::Color colorP);
+    Point2D(float x, float y);
+    Point2D(float x, float y, sf::Color colorP);
 
-    int getX();
-    int getY();
-
-    void setX(int x);
-    void setY(int y);
-
-    sf::Color getColor();
+    int getX() const;
+    int getY() const;
+    void setX(float x);
+    void setY(float y);
+    sf::Color getColor() const;
     void setColor(const sf::Color color);
 
+    void translate(float dx, float dy) override;
+    void rotate(float angle) override;
+    void scale(float factor) override;
+
 private:
-    int x, y;
+    float x, y;
     sf::Color colorP;
 };
 

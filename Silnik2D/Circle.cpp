@@ -17,11 +17,12 @@ void Circle::draw(PrimitiveRenderer& renderer) {
         y = yc + radius * sin(a) + 0.5f;
 
         Point2D point(x, y, outlineColor);
-        renderer.drawPoint(point); // Draw outline
+        renderer.drawPoint(point);
     }
 
     if (filled) {
-        renderer.fillColor(center, fillColor, sf::Color::Black); // Fill circle
+        //renderer.fillColor(center, fillColor, sf::Color::Black);
+        renderer.boundaryFill(center, fillColor, outlineColor);
     }
 }
 
@@ -35,12 +36,11 @@ void Circle::setOutlineColor(sf::Color outlineColor) {
 }
 
 void Circle::translate(float dx, float dy) {
-    center.setX(center.getX() + dx);
-    center.setY(center.getY() + dy);
+    center.translate(dx, dy);
 }
 
 void Circle::rotate(float angle) {
-    // Rotation has no visual effect on circles
+    center.rotate(angle);
 }
 
 void Circle::scale(float factor) {

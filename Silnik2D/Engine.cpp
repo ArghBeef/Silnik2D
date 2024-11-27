@@ -3,7 +3,7 @@
 #include "Polygon.h"
 
 Engine::Engine(int width, int height, const std::string& title, bool fullscreen)
-    : windowWidth(width), windowHeight(height), windowTitle(title), isFullscreen(fullscreen) {}
+    : windowWidth(width), windowHeight(height), windowTitle(title), isFullscreen(fullscreen), currentState(CIRCLE) {}
 
 void Engine::init() {
     sf::VideoMode videoMode(windowWidth, windowHeight);
@@ -17,9 +17,15 @@ void Engine::init() {
 
     window.setFramerateLimit(60);
 
-
     renderer = new PrimitiveRenderer(window);
 
+    BitmapHandler bhandler1, bhandler2;
+    if (bhandler1.loadFromFile("example1.png"))
+        std::cout << "Porzadek" << std::endl;
+    bhandler2.loadFromFile("example2.png");
+
+    bitmapobj.addBitmap(bhandler1);
+    bitmapobj.addBitmap(bhandler2);
 
 }
 
@@ -40,77 +46,186 @@ void Engine::handleEvents() {
             window.close();
         }
 
+        // Handle keyboard input
         if (event.type == sf::Event::KeyPressed) {
-            // Press X to create a circle
+            if (event.key.code == sf::Keyboard::Num1) {
+                std::cout << "Current mode: CIRCLE" << std::endl;
+                currentState = CIRCLE;
+            }
+            if (event.key.code == sf::Keyboard::Num2) {
+                std::cout << "Current mode: POLYGON" << std::endl;
+                currentState = POLYGON;
+            }
+            if (event.key.code == sf::Keyboard::Num3) {
+                std::cout << "Current mode: BITMAP" << std::endl;
+                currentState = BITMAP;
+            }
+            if (event.key.code == sf::Keyboard::Num4) {
+                std::cout << "Current mode: ELLIPSE" << std::endl;
+                currentState = ELLIPSE;
+            }
+            if (event.key.code == sf::Keyboard::C) {
+                currentColor = (currentColor + 1) % 7;
+                std::cout << "Current color: " << sceneColors[currentColor].second << std::endl;
+            }
+
             if (event.key.code == sf::Keyboard::X) {
-                Point2D center(windowWidth / 2, windowHeight / 2, sf::Color::White);
-                float radius = 50.0f; // Example radius
-                Circle newCircle(center, radius);
-                newCircle.setFillColor(sf::Color::Blue);
-                newCircle.setOutlineColor(sf::Color::Red);
-                circles.push_back(newCircle); // Add the new circle to the list
-            }
-
-            // Press T to create a square
-            if (event.key.code == sf::Keyboard::T) {
-                int size = 50; // Side length of the square
-                Point2D topLeft(windowWidth / 2 - size / 2, windowHeight / 2 - size / 2);
-                Point2D topRight(windowWidth / 2 + size / 2, windowHeight / 2 - size / 2);
-                Point2D bottomRight(windowWidth / 2 + size / 2, windowHeight / 2 + size / 2);
-                Point2D bottomLeft(windowWidth / 2 - size / 2, windowHeight / 2 + size / 2);
-
-                std::vector<Point2D> squarePoints = { topLeft, topRight, bottomRight, bottomLeft };
-                Polygon newSquare(squarePoints, true); // Closed polygon
-                newSquare.setFillColor(sf::Color::Green);
-                newSquare.setOutlineColor(sf::Color::Yellow);
-                shapes.push_back(newSquare); // Add the square to the shapes vector
-            }
-
-            // Translate all circles to the right
-            if (event.key.code == sf::Keyboard::A) {
-                for (auto& circle : circles) {
-                    circle.translate(10, 0); // Move 10 pixels to the right
+                switch (currentState) {
+                case CIRCLE: {
+                    circles.clear();
+                    break;
+                }
+                case POLYGON:
+                    shapes.clear();
+                    break;
+                case BITMAP:
+                    bitmapObjects.clear();
+                    break;
+                case ELLIPSE:
+                    ellipses.clear();
+                    break;
                 }
             }
-
-            // Translate all circles to the left
-            if (event.key.code == sf::Keyboard::D) {
-                for (auto& circle : circles) {
-                    circle.translate(-10, 0); // Move 10 pixels to the left
-                }
-            }
-
-            // Scale all circles up
             if (event.key.code == sf::Keyboard::S) {
-                for (auto& circle : circles) {
-                    circle.scale(1.1f); // Increase radius by 10%
+                switch (currentState) {
+                case CIRCLE: {
+                    for (auto& circle : circles) {
+                        circle.scale(1.1f);
+                    }
+                    break;
+                }
+                case POLYGON:
+                    for (auto& shape : shapes) {
+                        shape.scale(1.1f);
+                    }
+                    break;
+                case BITMAP:
+                    for (auto& bitmap : bitmapObjects) {
+                        bitmap.scale(1.5f);
+                    }
+                    break;
+                case ELLIPSE:
+                    for (auto& ellipse : ellipses) {
+                        ellipse.scale(1.5f);
+                    }
+                    break;
                 }
             }
-
-            // Scale all circles down
-            if (event.key.code == sf::Keyboard::W) {
-                for (auto& circle : circles) {
-                    circle.scale(0.9f); // Decrease radius by 10%
-                }
-            }
-
-            // Rotate polygons (if any are present)
             if (event.key.code == sf::Keyboard::R) {
-                for (auto& polygon : shapes) {
-                    polygon.scale(1.1); // Rotate polygons by 15 degrees
+                switch (currentState) {
+                case CIRCLE: {
+                    for (auto& circle : circles) {
+                        circle.rotate(1.0f);
+                    }
+                    break;
+                }
+                case POLYGON:
+                    for (auto& shape : shapes) {
+                        shape.rotate(1.0f);
+                    }
+                    break;
+                case BITMAP:
+                    for (auto& bitmap : bitmapObjects) {
+                        bitmap.rotate(1.0f);
+                    }
+                    break;
+                case ELLIPSE:
+                    for (auto& ellipse : ellipses) {
+                        ellipse.rotate(1.0f);
+                    }
+                    break;
+                }
+            }
+            if (event.key.code == sf::Keyboard::D) {
+                switch (currentState) {
+                case CIRCLE: {
+                    for (auto& circle : circles) {
+                        circle.translate(1.0f, 0.0f);
+                    }
+                    break;
+                }
+                case POLYGON:
+                    for (auto& shape : shapes) {
+                        shape.translate(1.0f, 0.0f);
+                    }
+                    break;
+                case BITMAP:
+                    for (auto& bitmap : bitmapObjects) {
+                        bitmap.translate(1.0f, 0.0f);
+                    }
+                    break;
+                case ELLIPSE:
+                    for (auto& ellipse : ellipses) {
+                        ellipse.translate(1.0f, 0.0f);
+                    }
+                    break;
+                }
+            }
+            if (event.key.code == sf::Keyboard::Enter && currentState == POLYGON) {
+                if (!mouseClickCoordinates.empty()) {
+                    Polygon newPolygon(mouseClickCoordinates, true);
+                    newPolygon.origin = gizmo;
+                    newPolygon.setFillColor(sceneColors[currentColor].first);
+                    newPolygon.setOutlineColor(sceneColors[(currentColor + 1) % 7].first);
+                    shapes.push_back(newPolygon);
+                    mouseClickCoordinates.clear();
                 }
             }
         }
     }
+
+        if (event.type == sf::Event::MouseButtonPressed) {
+            if (event.mouseButton.button == sf::Mouse::Left) {
+                std::cout << "Mouse button clicked at: "
+                    << event.mouseButton.x << ", " << event.mouseButton.y << std::endl;
+
+                Point2D point(event.mouseButton.x, event.mouseButton.y);
+
+                switch (currentState) {
+                case CIRCLE: {
+                    float radius = 50.0f;
+                    Circle newCircle(point, radius);
+                    newCircle.setFillColor(sceneColors[currentColor].first);
+                    newCircle.setOutlineColor(sceneColors[(currentColor + 1) % 7].first);
+                    circles.push_back(newCircle);
+                    break;
+                }
+                case POLYGON: {
+                    mouseClickCoordinates.push_back(point);
+                    break;
+                }
+                case BITMAP: {
+                    BitmapObject newBitmapObject = bitmapobj;
+                    newBitmapObject.translate(event.mouseButton.x, event.mouseButton.y);
+                    bitmapObjects.push_back(newBitmapObject);
+                    break;
+                }
+                case ELLIPSE: {
+                    float radiusX = 60.0f;
+                    float radiusY = 40.0f;
+                    Ellipse newEllipse(point, radiusX, radiusY, 0.0f);
+                    newEllipse.setFillColor(sceneColors[currentColor].first);
+                    newEllipse.setOutlineColor(sceneColors[(currentColor + 1) % 7].first);
+                    ellipses.push_back(newEllipse);
+                    break;
+                }
+                }
+            }
+
+            if (event.mouseButton.button == sf::Mouse::Right && currentState == POLYGON) {
+                gizmo.setX(event.mouseButton.x);
+                gizmo.setY(event.mouseButton.y);
+
+
+            }
+        }
 }
 
 void Engine::Render() {
     window.clear(sf::Color::Black);
 
-    // Clear the drawing buffer for dynamic updates
-    renderer->drawingBuffer.create(window.getSize().x, window.getSize().y, sf::Color::Black);
+    renderer->resetBuffer();
 
-    // Redraw all circles
     for (auto& circle : circles) {
         circle.draw(*renderer);
     }
@@ -119,11 +234,18 @@ void Engine::Render() {
         shape.draw(*renderer);
     }
 
-    // Render the updated drawing buffer
-    sf::Texture texture;
-    texture.loadFromImage(renderer->drawingBuffer);
-    sf::Sprite sprite(texture);
-    window.draw(sprite);
+    for (auto& ellipse : ellipses) {
+        ellipse.draw(*renderer);
+    }
+
+    renderer->draw();
+
+    float deltaTime = clock.restart().asSeconds();
+
+    for (auto& bitmap : bitmapObjects) {
+        bitmap.animate(deltaTime);
+        bitmap.draw(window);
+    }
 
     window.display();
 }

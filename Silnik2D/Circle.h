@@ -3,14 +3,12 @@
 
 #include <SFML/Graphics.hpp>
 #include "Point2D.h"
-#include "TransformableObject.h"
+#include "ShapeObject.h"
 #include <vector>
-#include <cmath>
-#define M_PI 3.14159265358979323846
 
-class PrimitiveRenderer; // Forward declaration of PrimitiveRenderer
+class PrimitiveRenderer;
 
-class Circle : public TransformableObject {
+class Circle : public ShapeObject {
 public:
     Circle(Point2D center, float radius);
     void draw(PrimitiveRenderer& renderer);
@@ -18,10 +16,10 @@ public:
     void setFillColor(sf::Color fill);
     void setOutlineColor(sf::Color outline);
 
-    // TransformableObject methods
     void translate(float dx, float dy) override;
-    void rotate(float angle) override; // Rotation doesn't apply directly to circles
     void scale(float factor) override;
+    void rotate(float angle) override;
+
 
     Point2D center;
     float radius;
