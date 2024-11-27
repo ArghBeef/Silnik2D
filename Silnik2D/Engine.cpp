@@ -46,7 +46,6 @@ void Engine::handleEvents() {
             window.close();
         }
 
-        // Handle keyboard input
         if (event.type == sf::Event::KeyPressed) {
             if (event.key.code == sf::Keyboard::Num1) {
                 std::cout << "Current mode: CIRCLE" << std::endl;
@@ -176,7 +175,7 @@ void Engine::handleEvents() {
 
         if (event.type == sf::Event::MouseButtonPressed) {
             if (event.mouseButton.button == sf::Mouse::Left) {
-                std::cout << "Mouse button clicked at: "
+                std::cout << "Wspolrzedna: "
                     << event.mouseButton.x << ", " << event.mouseButton.y << std::endl;
 
                 Point2D point(event.mouseButton.x, event.mouseButton.y);

@@ -53,7 +53,7 @@ private:
     bool closed = false; ///<Czy jest to prymityw zamnkiety
     bool filled = false; ///<Czy jest wypelniony kolorem
     sf::Color fillColor = sf::Color::White; ///<Kolor wypelniania
-    sf::Color outlineColor = sf::Color::Red; ///<Kolor konturu
+    sf::Color outlineColor = sf::Color::White; ///<Kolor konturu
 };
 
 #endif
