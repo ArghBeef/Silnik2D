@@ -4,6 +4,7 @@
 Circle::Circle(Point2D center, float radius)
     : center(center), radius(radius) {}
 
+
 void Circle::draw(PrimitiveRenderer& renderer) {
     float a, step;
     int x, y;

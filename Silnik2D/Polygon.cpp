@@ -6,13 +6,13 @@ Polygon::Polygon(const std::vector<Point2D>& points, bool closed)
     : points(points), closed(closed) {
 }
 
-void Polygon::setFillColor(const sf::Color& fillColor) {
-    this->fillColor = fillColor;
+void Polygon::setFillColor(sf::Color color) {
+    fillColor = color;
     filled = true;
 }
 
-void Polygon::setOutlineColor(const sf::Color& outlineColor) {
-    this->outlineColor = outlineColor;
+void Polygon::setOutlineColor(sf::Color color) {
+    outlineColor = color;
 }
 
 void Polygon::draw(PrimitiveRenderer& renderer) {

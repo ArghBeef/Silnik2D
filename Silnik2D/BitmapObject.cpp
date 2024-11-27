@@ -2,11 +2,6 @@
 
 BitmapObject::BitmapObject() = default;
 
-BitmapObject::~BitmapObject() {
-    bitmaps.clear();
-}
-
-
 void BitmapObject::draw(sf::RenderWindow& window) {
     if (bitmaps.empty()) return;
 

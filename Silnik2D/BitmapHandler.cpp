@@ -2,7 +2,6 @@
 
 BitmapHandler::BitmapHandler() : isInitialized(false) {}
 
-BitmapHandler::~BitmapHandler() {}
 
 bool BitmapHandler::create(unsigned int width, unsigned int height, sf::Color color) {
     bitmap.create(width, height, color);

@@ -20,29 +20,37 @@ void PrimitiveRenderer::drawLine(Point2D p0, Point2D p1, sf::Color color) {
     int x1 = p1.getX();
     int y1 = p1.getY();
 
+    // Разница координат
     int dx = std::abs(x1 - x0);
     int dy = std::abs(y1 - y0);
 
-    int sx = (x0 < x1) ? 1 : -1;
-    int sy = (y0 < y1) ? 1 : -1;
+    // Определяем направления роста
+    int stepX = (x0 < x1) ? 1 : -1;
+    int stepY = (y0 < y1) ? 1 : -1;
 
+    // Ошибка для управления выбором точки
     int err = dx - dy;
 
     while (true) {
+        // Рисуем текущую точку
         drawPoint(Point2D(x0, y0, color));
 
-        if (x0 == x1 && y0 == y1) {
-            break;
+        // Если достигли конечной точки, выходим из цикла
+        if (x0 == x1 && y0 == y1) break;
+
+        // Двойная ошибка для определения шага
+        int err2 = err * 2;
+
+        // Смещаем координату X
+        if (err2 > -dy) {
+            err -= dy;
+            x0 += stepX;
         }
 
-        int e2 = err * 2;
-        if (e2 > -dy) {
-            err -= dy;
-            x0 += sx;
-        }
-        if (e2 < dx) {
+        // Смещаем координату Y
+        if (err2 < dx) {
             err += dx;
-            y0 += sy;
+            y0 += stepY;
         }
     }
 }
